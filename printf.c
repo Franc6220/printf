@@ -1,5 +1,7 @@
 #include "main.h"
 
+int print_integer(int n);
+
 /**
  * _printf - produces output according to a format.
  * @format: The format string containing the characters and the specifiers
@@ -32,6 +34,10 @@ int _printf(const char *format, ...)
                 case '%':
                     printed_chars += print_char('%');
                     break;
+                case 'd':
+                case 'i':
+                    printed_chars += print_integer(va_arg(args, int));
+                    break;
                 default:
                     printed_chars += print_char('%');
                     printed_chars += print_char(format[i]);
@@ -50,35 +56,33 @@ int _printf(const char *format, ...)
 }
 
 /**
- * print_char - Writes a character to stdout.
- * @c: The character to print
- *
- * Return: On success 1.
- */
-int print_char(char c)
-{
-    return (write(1, &c, 1));
-}
-
-/**
- * print_string - Writes a string to stdout.
- * @str: The string to print
+ * print_integer - Writes an integer to stdout.
+ * @n: The integer to print
  *
  * Return: The number of characters printed
  */
-int print_string(char *str)
+int print_integer(int n)
 {
-    int i = 0;
+    unsigned int num;
+    int printed_chars = 0;
 
-    if (str == NULL)
-        str = "(null)";
-
-    while (str[i])
+    if (n < 0)
     {
-        print_char(str[i]);
-        i++;
+        printed_chars += print_char('-');
+        num = -n;
+    }
+    else
+    {
+        num = n;
     }
 
-    return (i);
+    if (num / 10 != 0)
+    {
+        printed_chars += print_integer(num / 10);
+    }
+
+    printed_chars += print_char((num % 10) + '0');
+
+    return (printed_chars);
 }
 
